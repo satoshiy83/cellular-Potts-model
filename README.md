@@ -10,7 +10,7 @@ This project requires no Matlab toolbox, but a custom framework of objective cla
 ## Example
 Below is an example of simulation in which a tissue with two types of cells is compressed. The cells have different surface tensions. It first sets parameters, prepares an initial configuration of cells, and then simulates motion of the cells.
 
-## Parameters.
+### Parameters
 The parameters are set in a dictionary ‘hint’ and saved in a folder ‘properties’.
 To keep reference surface area before and after the compression, CPMCACell its used.
 It defines three cell types and three subcellular components.
@@ -296,7 +296,7 @@ fprintf(fid,txt);
 fclose(fid);
 ```
 
-## Initial configuration.
+### Initial configuration
 The initial configuration is prepared by Voronoi tessellation from random sparse points.
 ```
 %% Prepare a map of compressed tissue.
@@ -371,7 +371,7 @@ for j = 1:cells.count
 end
 ```
 
-## Running simulation.
+### Running simulation
 Finally, it simulates relaxation of the cells in the compressed tissue. Images of cells and cell segmentation are exported when runSimulation() terminates. Therefore it iterates for several times.
 ```
 mkdir('segmentations');
