@@ -5,7 +5,7 @@ This project provides a framework for cellular Potts model simulation.
 Download files and put them in a folder with a suitable name. Go to Matlab command line, enter "addpath" + a full path of the folder, and enter "savepath".
 
 ## Requirement
-This project requires no Matlab toolbox, but a custom framework of objective classes SYObject family which is available at [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3625631.svg)](https://doi.org/10.5281/zenodo.3625631).
+This project requires no Matlab toolbox, but a custom framework of objective classes SYObject family which is available at [![DOI](https://zenodo.org/badge/235579182.svg)](https://zenodo.org/badge/latestdoi/235579182).
 
 ## Example
 Below is an example of simulation in which a tissue with two types of cells is compressed. The cells have different surface tensions. It first sets parameters, prepares an initial configuration of cells, and then simulates motion of the cells.
