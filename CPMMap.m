@@ -54,7 +54,7 @@ function obj = initWithMaps(obj,cellMap,subcellMap,cellTypeMap,hint)
     obj.cellTypeMap = uint16(cellTypeMap);
     
     obj.hint = hint.copy;
-    obj.labelDict = hint.objectForKey('CPMLabelDictKey');
+    obj.labelDict = hint.objectForKey("CPMLabelDictKey");
     
     obj.frameSize = [size(cellMap,1),size(cellMap,2)];
     
@@ -142,17 +142,17 @@ function drawCellAtPoint(obj,bitmap,point)
     
     % draw cell.
     citmap = obj.cellMap(kndices);
-    citmap = citmap .* ~mask + array(1) .* mask;
+    citmap = citmap .* uint16(~mask) + uint16(array(1) .* mask);
     obj.cellMap(kndices) = citmap;
     
     % draw subcellular components.
     citmap = obj.subcellMap(kndices);
-    citmap = citmap .* ~mask + bitmap(:,:,2) .* mask;
+    citmap = citmap .* uint16(~mask) + bitmap(:,:,2) .* uint16(mask);
     obj.subcellMap(kndices) = citmap;
     
     % draw cell type.
     citmap = obj.cellTypeMap(kndices);
-    citmap = citmap .* ~mask + bitmap(:,:,3) .* mask;
+    citmap = citmap .* uint16(~mask) + bitmap(:,:,3) .* uint16(mask);
     obj.cellTypeMap(kndices) = citmap;
 end
 
@@ -276,18 +276,48 @@ function result = distanceMapAround(obj,point)
 % Return value is a map of distance from the origin.
     result = obj.distanceMapOnTorusAround(point);
 end
+function result = distanceMapOnClosedPlaneAround(obj,point)
+    d_r = (1:obj.frameSize(1))' - point(1);
+    d_c = (1:obj.frameSize(2)) - point(2);
+    result = sqrt(d_r .^ 2 + d_c .^ 2);
+end
 function result = distanceMapOnTorusAround(obj,point)
 % Method to get a map showing distance from a point.
 % result = distanceMapOnTorusAround(obj,point)
 % Argument point specifies an origin.
 % Return value is a map of distance from the origin, assuming the indices
 %   a modulus and a space of the map is torus.
-    u = round(point(1)) - obj.dmCenter(1);
-    l = round(point(2)) - obj.dmCenter(2);
+    u = obj.dmCenter(1) - round(point(1));
+    l = obj.dmCenter(2) - round(point(2));
     indices = mod(u:u + obj.frameSize(1) - 1,obj.frameSize(1)) + 1;
     jndices = mod(l:l + obj.frameSize(2) - 1,obj.frameSize(2)) + 1;
     
     result = obj.distanceMap(indices,jndices);
+end
+function result = distanceMapFromComponent(obj,component,isPlaneClosed)
+    if isa(component,"string")
+        labelArray = obj.hint.objectForKey("CPMLabelArrayKey");
+        subcellIndices = obj.hint.objectForKey("CPMSubcellIndicesKey");
+        component = ...
+            subcellIndices.var(labelArray.indexOfObject(component));
+    end
+
+    ditmap = [];
+    
+    citmap = obj.subcellMap == component;
+    indices = find(citmap);
+    for i = indices'
+        [r,c] = ind2sub(obj.frameSize,i);
+        point = [r,c];
+        if isPlaneClosed
+            bitmap = obj.distanceMapOnClosedPlaneAround(point);
+        else
+            bitmap = obj.distanceMapAround(point);
+        end
+        ditmap = min(cat(3,ditmap,bitmap),[],3);
+    end
+
+    result = ditmap;
 end
 
 end

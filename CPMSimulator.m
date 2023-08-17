@@ -221,32 +221,35 @@ end
 function readHint(obj)
 % Method to import parameters from the hint.
 % readHint(obj)
-    if ~obj.hint.isNanForKey('CPMMapClassKey')
-        obj.mapClass = obj.hint.objectForKey('CPMMapClassKey');
+    if ~obj.hint.isNanForKey("CPMMapClassKey")
+        obj.mapClass = obj.hint.objectForKey("CPMMapClassKey");
     end
-    if ~obj.hint.isNanForKey('CPMCellClassKey')
-        obj.cellClass = obj.hint.objectForKey('CPMCellClassKey');
+    if ~obj.hint.isNanForKey("CPMCellClassKey")
+        obj.cellClass = obj.hint.objectForKey("CPMCellClassKey");
     end
     
-    obj.subcellIndices = obj.hint.objectForKey('CPMSubcellIndicesKey');
-    obj.subcellConverter = obj.hint.objectForKey('CPMSubcellConverterKey');
+    obj.subcellIndices = obj.hint.objectForKey("CPMSubcellIndicesKey");
+    obj.subcellConverter = obj.hint.objectForKey("CPMSubcellConverterKey");
     
-    obj.contactEnergy = obj.hint.objectForKey('CPMContactEnergyKey');
+    obj.contactEnergy = obj.hint.objectForKey("CPMContactEnergyKey");
     obj.surfaceYModulusArray = ...
-        obj.hint.objectForKey('CPMSurfaceYModulusArrayKey');
+        obj.hint.objectForKey("CPMSurfaceYModulusArrayKey");
     obj.areaBModulusArray = ...
-        obj.hint.objectForKey('CPMAreaBModulusArrayKey');
+        obj.hint.objectForKey("CPMAreaBModulusArrayKey");
     obj.HamiltonianSwitch = ...
-        obj.hint.objectForKey('CPMHamiltonianSwitchKey');
-    obj.T = obj.hint.objectForKey('CPMTKey');
+        obj.hint.objectForKey("CPMHamiltonianSwitchKey");
+    obj.T = obj.hint.objectForKey("CPMTKey");
     
-    obj.drawingSwitch = obj.hint.objectForKey('CPMDrawingSwitchKey');
-    obj.lut = obj.hint.objectForKey('CPMLutKey');
+    obj.drawingSwitch = obj.hint.objectForKey("CPMDrawingSwitchKey");
+    obj.lut = obj.hint.objectForKey("CPMLutKey");
     
-    obj.outputName = obj.hint.objectForKey('CPMOutputNameKey');
+    obj.outputName = obj.hint.objectForKey("CPMOutputNameKey");
+    if isstring(obj.outputName)
+        obj.outputName = convertStringsToChars(obj.outputName);
+    end
     if ~isnan(obj.outputName)
-        obj.frameInterval = obj.hint.objectForKey('CPMFrameIntervalKey');
-        obj.stackLimit = obj.hint.objectForKey('CPMStackLimitKey');
+        obj.frameInterval = obj.hint.objectForKey("CPMFrameIntervalKey");
+        obj.stackLimit = obj.hint.objectForKey("CPMStackLimitKey");
     else
         obj.frameInterval = -1;
     end
@@ -409,6 +412,24 @@ function endSimulation(obj)
     if ishandle(obj.window)
         delete(obj.window);
     end
+end
+function rerunSimulation(obj)
+% Method to rerun a simulation.
+% rerunSimulation(obj)
+    str = [obj.outputName,'.end.mat'];
+    if exist(str,'file') == 2
+        ttr = [obj.outputName,'midway.mat'];
+        if exist(ttr,'file') == 2
+            delete(ttr)
+        end
+        movefile(str,ttr);
+    end
+
+    obj.intervalCounter = obj.frameInterval;
+    obj.frameCounter = 0;
+    obj.endFlag = false;
+
+    obj.startSimulation;
 end
 
 function prepareWindow(obj)

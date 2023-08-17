@@ -59,6 +59,7 @@ function obj = initWithData(obj,data)
     obj.areaBModulus = ...
         obj.owner.areaBModulusArray.objectAtIndex(obj.cellType);
 end
+
 function dest = copy(obj,dest)
 % Method to make a shallow copy.
 % dest = copy(obj,dest)
@@ -160,6 +161,9 @@ function enframe(obj)
 %     end
 end
 function result = checkFrame(obj)
+% Method to check frame validity.
+% result = checkFrame(obj)
+% Return value is a boolean.
     indices = obj.frame(1) + 1:obj.frame(2) - 1;
     jndices = obj.frame(3) + 1:obj.frame(4) - 1;
     kndices = obj.map.indices(indices,jndices);

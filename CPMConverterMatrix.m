@@ -41,7 +41,7 @@ function result = converterWithLabels(obj,labels)
 end
 
 function result = matrixWithLabels(obj,labels)
-% depreted method.
+% depleted method.
     indices = zeros(labels.count,1);
     for i = 1:labels.count
         indices(i) = obj.labelArray.indexOfObject(labels.objectAtIndex(i));
@@ -50,7 +50,7 @@ function result = matrixWithLabels(obj,labels)
 end
 
 function result = indexOfLabel(obj,label)
-% depreted method.
+% depleted method.
     result = obj.labelArray.indexOfObject(label);
 end
 

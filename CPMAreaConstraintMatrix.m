@@ -70,7 +70,7 @@ function result = ...
 end
 
 function result = aLambdaArrayWithCellTypesAndLabels(obj,cellTypes,labels)
-% depreted method.
+% depleted method.
     indices = zeros(1,labels.count);
     for i = 1:labels.count
         index = obj.labelArray.indexOfObject(labels.objectAtIndex(i));
